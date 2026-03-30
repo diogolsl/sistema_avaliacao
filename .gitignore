@@ -1,0 +1,28 @@
+# Ambientes Virtuais
+venv/
+env/
+.venv/
+
+# Variáveis de Ambiente e Segredos (MUITO IMPORTANTE)
+.env
+.env.local
+
+# Arquivos compilados e de cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+*.log
+
+# Pastas de configurações de IDEs (VS Code, PyCharm, etc.)
+.vscode/
+.idea/
+*.swp
+
+# Arquivos de sistema operacional (Mac/Windows)
+.DS_Store
+Thumbs.db
+
+# Se futuramente você fizer dumps (backups) do seu banco MySQL para testar, ignore-os:
+*.sql
