@@ -23,7 +23,7 @@ def criar_filme():
     except ValueError:
         flash('Ano de lançamento inválido.', 'error')
         
-    return redirect(url_for('filmes_bp.listar_filmes'))
+    return redirect(url_for('filmes.listar_filmes'))
 
 @filmes_bp.route('/', methods=['GET'])
 def listar_filmes():
@@ -44,7 +44,7 @@ def atualizar_filme(id_filme):
             filme.ano_lancamento = int(ano_str)
         except ValueError:
             flash('Ano de lançamento inválido.', 'error')
-            return redirect(url_for('filmes_bp.listar_filmes'))
+            return redirect(url_for('filmes.listar_filmes'))
             
     id_genero = request.form.get('id_genero')
     if id_genero:
@@ -52,7 +52,7 @@ def atualizar_filme(id_filme):
 
     db.session.commit()
     flash('Filme atualizado com sucesso!', 'success')
-    return redirect(url_for('filmes_bp.listar_filmes'))
+    return redirect(url_for('filmes.listar_filmes'))
 
 @filmes_bp.route('/deletar/<int:id_filme>', methods=['POST'])
 def deletar_filme(id_filme):
@@ -61,4 +61,4 @@ def deletar_filme(id_filme):
     db.session.delete(filme)
     db.session.commit()
     flash('Filme excluído com sucesso!', 'success')
-    return redirect(url_for('filmes_bp.listar_filmes'))
+    return redirect(url_for('filmes.listar_filmes'))

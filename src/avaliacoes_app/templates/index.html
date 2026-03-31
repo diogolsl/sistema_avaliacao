@@ -20,7 +20,7 @@
                 <p class="card-text text-truncate" style="max-height: 4.5em; overflow: hidden;" title="{{ filme.sinopse }}">{{ filme.sinopse }}</p>
             </div>
             <div class="card-footer bg-transparent border-top p-3">
-                <a href="{{ url_for('avaliacoes.listar_avaliacoes') }}?filme={{ filme.id_filme }}" class="btn btn-warning w-100 mb-2 fw-bold text-dark">⭐ Avaliar Filme</a>
+                <a href="{{ url_for('avaliacoes.tela_avaliar', id_filme=filme.id_filme) }}" class="btn btn-primary w-100">Avaliar Filme</a>
                 
                 <div class="d-flex gap-2">
                     <button class="btn btn-outline-info btn-sm w-50" data-bs-toggle="modal" data-bs-target="#editFilme{{ filme.id_filme }}">Editar</button>

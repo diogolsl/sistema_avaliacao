@@ -17,12 +17,12 @@ def criar_genero():
         db.session.rollback()
         flash('Este gênero já está cadastrado!', 'error')
         
-    return redirect(url_for('generos_bp.listar_generos'))
+    return redirect(url_for('generos.listar_generos'))
 
 @generos_bp.route('/', methods=['GET'])
 def listar_generos():
     generos = Genero.query.all()
-    return render_template('generos.html', generos=generos)
+    return render_template('generos/generos.html', generos=generos)
 
 @generos_bp.route('/editar/<int:id_genero>', methods=['POST'])
 def atualizar_genero(id_genero):
@@ -38,13 +38,13 @@ def atualizar_genero(id_genero):
             db.session.rollback()
             flash('Já existe um gênero com este nome.', 'error')
             
-    return redirect(url_for('generos_bp.listar_generos'))
+    return redirect(url_for('generos.listar_generos'))
 
 @generos_bp.route('/deletar/<int:id_genero>', methods=['POST'])
 def deletar_genero(id_genero):
     genero = Genero.query.get_or_404(id_genero)
-    
+
     db.session.delete(genero)
     db.session.commit()
     flash('Gênero excluído com sucesso!', 'success')
-    return redirect(url_for('generos_bp.listar_generos'))
+    return redirect(url_for('generos.listar_generos'))

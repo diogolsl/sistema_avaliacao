@@ -9,9 +9,9 @@
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ url_for('avaliacoes.criar_avaliacao') }}">
-                    
+    
                     <input type="hidden" name="id_filme" value="{{ filme.id_filme }}">
-                    
+
                     <div class="mb-3">
                         <label for="id_usuario" class="form-label">Quem está avaliando?</label>
                         <select class="form-select" id="id_usuario" name="id_usuario" required>

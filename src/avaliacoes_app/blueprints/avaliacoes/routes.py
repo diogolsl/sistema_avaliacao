@@ -4,24 +4,28 @@ from ...extensions import db
 from . import avaliacoes_bp
 from ...models import Avaliacao, Filme, Usuario
 
-# CREATE
+@avaliacoes_bp.route('/avaliar/<int:id_filme>', methods=['GET'])
+def tela_avaliar(id_filme):
+    filme = Filme.query.get_or_404(id_filme)
+    usuarios = Usuario.query.all()
+    
+    return render_template('filmes/avaliar.html', filme=filme, usuarios=usuarios)
+
 @avaliacoes_bp.route('/nova', methods=['POST'])
 def criar_avaliacao():
     id_usuario = request.form.get('id_usuario')
     id_filme = request.form.get('id_filme')
     nota_str = request.form.get('nota')
-    
-    # 1. Validação da nota no Python (melhora o feedback pro usuário)
+
     try:
         nota = int(nota_str)
         if nota < 1 or nota > 5:
             flash('A nota deve ser um valor entre 1 e 5.', 'error')
-            return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
+            return redirect(url_for('avaliacoes.listar_avaliacoes'))
     except (ValueError, TypeError):
         flash('Nota inválida. Por favor, insira um número inteiro.', 'error')
-        return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
+        return redirect(url_for('avaliacoes.listar_avaliacoes'))
 
-    # 2. Tentativa de inserção no banco
     try: 
         nova_avaliacao = Avaliacao(
             id_usuario=id_usuario,
@@ -32,24 +36,18 @@ def criar_avaliacao():
         db.session.commit()
     
         flash('Avaliação registrada com sucesso!', 'success')
-        return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
+        return redirect(url_for('avaliacoes.listar_avaliacoes'))
         
     except IntegrityError:
         db.session.rollback()
-        # Se cair aqui, a restrição uk_usuario_filme barrou a inserção
         flash('Você já avaliou este filme anteriormente!', 'error')
-        return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
+        return redirect(url_for('avaliacoes.listar_avaliacoes'))
 
-
-# READ (Listar Todas)
 @avaliacoes_bp.route('/', methods=['GET'])
 def listar_avaliacoes():
     avaliacoes = Avaliacao.query.all()
-    # Dica: Você também pode usar join() para trazer o título do filme e nome do usuário aqui
-    return render_template('avaliar.html', avaliacoes=avaliacoes)
+    return render_template('filmes/avaliar.html', avaliacoes=avaliacoes)
 
-
-# UPDATE (Usando POST para compatibilidade com HTML Forms)
 @avaliacoes_bp.route('/editar/<int:id_avaliacao>', methods=['POST'])
 def atualizar_avaliacao(id_avaliacao):
     avaliacao = Avaliacao.query.get_or_404(id_avaliacao)
@@ -60,7 +58,7 @@ def atualizar_avaliacao(id_avaliacao):
             nota = int(nota_str)
             if nota < 1 or nota > 5:
                 flash('A nota deve ser entre 1 e 5.', 'error')
-                return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
+                return redirect(url_for('avaliacoes.listar_avaliacoes'))
             
             avaliacao.nota = nota
             db.session.commit()
@@ -69,10 +67,8 @@ def atualizar_avaliacao(id_avaliacao):
         except ValueError:
             flash('Nota inválida. Por favor, insira um número inteiro.', 'error')
             
-    return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
+    return redirect(url_for('avaliacoes.listar_avaliacoes'))
 
-
-# DELETE (Usando POST para compatibilidade com HTML Forms)
 @avaliacoes_bp.route('/deletar/<int:id_avaliacao>', methods=['POST'])
 def deletar_avaliacao(id_avaliacao):
     avaliacao = Avaliacao.query.get_or_404(id_avaliacao)
@@ -81,4 +77,4 @@ def deletar_avaliacao(id_avaliacao):
     db.session.commit()
 
     flash('Avaliação deletada com sucesso!', 'success')
-    return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
+    return redirect(url_for('avaliacoes.listar_avaliacoes'))

@@ -18,13 +18,13 @@ def criar_usuario():
         db.session.rollback()
         flash('Este e-mail já está sendo utilizado por outro usuário!', 'error')
         
-    return redirect(url_for('usuarios_bp.listar_usuarios'))
+    return redirect(url_for('usuarios.listar_usuarios'))
 
 @usuarios_bp.route('/', methods=['GET'])
 def listar_usuarios():
     usuarios = Usuario.query.all()
 
-    return render_template('usuarios.html', usuarios=usuarios)
+    return render_template('usuarios/usuarios.html', usuarios=usuarios)
 
 @usuarios_bp.route('/editar/<int:id_usuario>', methods=['POST'])
 def atualizar_usuario(id_usuario):
@@ -43,14 +43,14 @@ def atualizar_usuario(id_usuario):
             db.session.rollback()
             flash('Este e-mail já está em uso.', 'error')
 
-    return redirect(url_for('usuarios_bp.listar_usuarios'))
+    return redirect(url_for('usuarios.listar_usuarios'))
 
 
 @usuarios_bp.route('/deletar/<int:id_usuario>', methods=['POST'])
 def deletar_usuario(id_usuario):
     usuario = Usuario.query.get_or_404(id_usuario)
-    
+
     db.session.delete(usuario)
     db.session.commit()
     flash('Usuário excluído com sucesso!', 'success')
-    return redirect(url_for('usuarios_bp.listar_usuarios'))
+    return redirect(url_for('usuarios.listar_usuarios'))
