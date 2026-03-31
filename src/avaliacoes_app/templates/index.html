@@ -20,11 +20,11 @@
                 <p class="card-text text-truncate" style="max-height: 4.5em; overflow: hidden;" title="{{ filme.sinopse }}">{{ filme.sinopse }}</p>
             </div>
             <div class="card-footer bg-transparent border-top p-3">
-                <a href="{{ url_for('avaliacoes_bp.listar_avaliacoes') }}?filme={{ filme.id_filme }}" class="btn btn-warning w-100 mb-2 fw-bold text-dark">⭐ Avaliar Filme</a>
+                <a href="{{ url_for('avaliacoes.listar_avaliacoes') }}?filme={{ filme.id_filme }}" class="btn btn-warning w-100 mb-2 fw-bold text-dark">⭐ Avaliar Filme</a>
                 
                 <div class="d-flex gap-2">
                     <button class="btn btn-outline-info btn-sm w-50" data-bs-toggle="modal" data-bs-target="#editFilme{{ filme.id_filme }}">Editar</button>
-                    <form method="POST" action="{{ url_for('filmes_bp.deletar_filme', id_filme=filme.id_filme) }}" class="w-50" onsubmit="return confirm('Excluir o filme apagará todas as suas avaliações. Continuar?');">
+                    <form method="POST" action="{{ url_for('filmes.deletar_filme', id_filme=filme.id_filme) }}" class="w-50" onsubmit="return confirm('Excluir o filme apagará todas as suas avaliações. Continuar?');">
                         <button type="submit" class="btn btn-outline-danger btn-sm w-100">Excluir</button>
                     </form>
                 </div>
@@ -34,7 +34,7 @@
 
     <div class="modal fade" id="editFilme{{ filme.id_filme }}" tabindex="-1">
         <div class="modal-dialog modal-lg">
-            <form method="POST" action="{{ url_for('filmes_bp.atualizar_filme', id_filme=filme.id_filme) }}" class="modal-content">
+            <form method="POST" action="{{ url_for('filmes.atualizar_filme', id_filme=filme.id_filme) }}" class="modal-content">
                 <div class="modal-header bg-info text-white">
                     <h5 class="modal-title">Editar Filme</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -79,7 +79,7 @@
 
 <div class="modal fade" id="modalNovoFilme" tabindex="-1">
     <div class="modal-dialog modal-lg">
-        <form method="POST" action="{{ url_for('filmes_bp.criar_filme') }}" class="modal-content border-0 shadow">
+        <form method="POST" action="{{ url_for('filmes.criar_filme') }}" class="modal-content border-0 shadow">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title">Cadastrar Novo Filme</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>

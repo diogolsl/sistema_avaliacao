@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from .extensions import db, migrate
 from .config import Config
 
@@ -22,4 +22,9 @@ def create_app(config_class=Config):
         app.register_blueprint(avaliacoes_bp)
         app.register_blueprint(generos_bp)
 
+
+        @app.route('/')
+        def index():
+            return redirect(url_for('filmes.listar_filmes'))
+        
     return app

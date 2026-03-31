@@ -8,7 +8,7 @@
                 <h4 class="mb-0">Avaliar: {{ filme.titulo }}</h4>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ url_for('avaliacoes_bp.criar_avaliacao') }}">
+                <form method="POST" action="{{ url_for('avaliacoes.criar_avaliacao') }}">
                     
                     <input type="hidden" name="id_filme" value="{{ filme.id_filme }}">
                     
@@ -67,7 +67,7 @@
                     </div>
                     
                     <div class="d-flex gap-2 mt-2 mt-md-0">
-                        <form method="POST" action="{{ url_for('avaliacoes_bp.deletar_avaliacao', id_avaliacao=avaliacao.id_avaliacao) }}" onsubmit="return confirm('Tem certeza que deseja excluir esta avaliação?');">
+                        <form method="POST" action="{{ url_for('avaliacoes.deletar_avaliacao', id_avaliacao=avaliacao.id_avaliacao) }}" onsubmit="return confirm('Tem certeza que deseja excluir esta avaliação?');">
                             <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
                         </form>
                         
@@ -85,7 +85,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             
-                            <form method="POST" action="{{ url_for('avaliacoes_bp.atualizar_avaliacao', id_avaliacao=avaliacao.id_avaliacao) }}">
+                            <form method="POST" action="{{ url_for('avaliacoes.atualizar_avaliacao', id_avaliacao=avaliacao.id_avaliacao) }}">
                                 <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="nota_edit_{{ avaliacao.id_avaliacao }}" class="form-label">Nova Nota (1 a 5)</label>
@@ -116,7 +116,7 @@
 </div>
                         <div class="d-flex gap-2 mt-2 mt-md-0">
                             
-                            <form method="POST" action="{{ url_for('avaliacoes_bp.deletar_avaliacao', id_avaliacao=avaliacao.id_avaliacao) }}" onsubmit="return confirm('Tem certeza que deseja excluir esta avaliação?');">
+                            <form method="POST" action="{{ url_for('avaliacoes.deletar_avaliacao', id_avaliacao=avaliacao.id_avaliacao) }}" onsubmit="return confirm('Tem certeza que deseja excluir esta avaliação?');">
                                 <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
                             </form>
                             

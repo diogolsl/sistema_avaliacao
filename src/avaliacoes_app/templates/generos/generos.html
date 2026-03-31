@@ -8,7 +8,7 @@
                 <h5 class="mb-0">Novo Gênero</h5>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ url_for('generos_bp.criar_genero') }}">
+                <form method="POST" action="{{ url_for('generos.criar_genero') }}">
                     <div class="mb-3">
                         <label class="form-label">Nome do Gênero</label>
                         <input type="text" class="form-control" name="nome" placeholder="Ex: Ação, Comédia..." required>
@@ -27,7 +27,7 @@
                 {{ genero.nome }}
                 <div class="d-flex gap-2">
                     <button class="btn btn-sm btn-info text-white" data-bs-toggle="modal" data-bs-target="#editGen{{ genero.id_genero }}">Editar</button>
-                    <form method="POST" action="{{ url_for('generos_bp.deletar_genero', id_genero=genero.id_genero) }}" onsubmit="return confirm('Tem certeza que deseja excluir?');">
+                    <form method="POST" action="{{ url_for('generos.deletar_genero', id_genero=genero.id_genero) }}" onsubmit="return confirm('Tem certeza que deseja excluir?');">
                         <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
                     </form>
                 </div>
@@ -35,7 +35,7 @@
 
             <div class="modal fade" id="editGen{{ genero.id_genero }}" tabindex="-1">
                 <div class="modal-dialog">
-                    <form method="POST" action="{{ url_for('generos_bp.atualizar_genero', id_genero=genero.id_genero) }}" class="modal-content">
+                    <form method="POST" action="{{ url_for('generos.atualizar_genero', id_genero=genero.id_genero) }}" class="modal-content">
                         <div class="modal-header bg-info text-white">
                             <h5 class="modal-title">Editar Gênero</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

@@ -11,20 +11,20 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
     <div class="container">
-        <a class="navbar-brand" href="{{ url_for('filmes_bp.listar_filmes') }}">🎬 CineAvalia</a>
+        <a class="navbar-brand" href="{{ url_for('filmes.listar_filmes') }}">🎬 CineAvalia</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('filmes_bp.listar_filmes') }}">Filmes</a>
+                    <a class="nav-link" href="{{ url_for('filmes.listar_filmes') }}">Filmes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('generos_bp.listar_generos') }}">Gêneros</a>
+                    <a class="nav-link" href="{{ url_for('generos.listar_generos') }}">Gêneros</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('usuarios_bp.listar_usuarios') }}">Usuários</a>
+                    <a class="nav-link" href="{{ url_for('usuarios.listar_usuarios') }}">Usuários</a>
                 </li>
             </ul>
         </div>
