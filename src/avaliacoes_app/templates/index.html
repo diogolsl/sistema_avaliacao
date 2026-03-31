@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+    <h2>Catálogo de Filmes</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNovoFilme">
+        + Novo Filme
+    </button>
+</div>
+
+<div class="row">
+    {% for filme in filmes %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm border-0 bg-white">
+            <div class="card-body">
+                <h5 class="card-title text-primary fw-bold">{{ filme.titulo }} ({{ filme.ano_lancamento }})</h5>
+                <h6 class="card-subtitle mb-3 text-muted">
+                    <span class="badge bg-secondary">{{ filme.categoria.nome if filme.categoria else 'Sem Gênero' }}</span>
+                </h6>
+                <p class="card-text text-truncate" style="max-height: 4.5em; overflow: hidden;" title="{{ filme.sinopse }}">{{ filme.sinopse }}</p>
+            </div>
+            <div class="card-footer bg-transparent border-top p-3">
+                <a href="{{ url_for('avaliacoes_bp.listar_avaliacoes') }}?filme={{ filme.id_filme }}" class="btn btn-warning w-100 mb-2 fw-bold text-dark">⭐ Avaliar Filme</a>
+                
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-info btn-sm w-50" data-bs-toggle="modal" data-bs-target="#editFilme{{ filme.id_filme }}">Editar</button>
+                    <form method="POST" action="{{ url_for('filmes_bp.deletar_filme', id_filme=filme.id_filme) }}" class="w-50" onsubmit="return confirm('Excluir o filme apagará todas as suas avaliações. Continuar?');">
+                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">Excluir</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editFilme{{ filme.id_filme }}" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <form method="POST" action="{{ url_for('filmes_bp.atualizar_filme', id_filme=filme.id_filme) }}" class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">Editar Filme</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body row">
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label">Título</label>
+                        <input type="text" class="form-control" name="titulo" value="{{ filme.titulo }}" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Ano</label>
+                        <input type="number" class="form-control" name="ano_lancamento" value="{{ filme.ano_lancamento }}" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Gênero</label>
+                        <select class="form-select" name="id_genero">
+                            <option value="">Sem gênero</option>
+                            {% for g in generos %}
+                                <option value="{{ g.id_genero }}" {% if filme.id_genero == g.id_genero %}selected{% endif %}>{{ g.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Sinopse</label>
+                        <textarea class="form-control" name="sinopse" rows="3">{{ filme.sinopse }}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center py-5 text-muted">
+        <h4>Nenhum filme disponível no catálogo.</h4>
+        <p>Clique em "+ Novo Filme" para começar!</p>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="modal fade" id="modalNovoFilme" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <form method="POST" action="{{ url_for('filmes_bp.criar_filme') }}" class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Cadastrar Novo Filme</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body row">
+                <div class="col-md-8 mb-3">
+                    <label class="form-label">Título do Filme</label>
+                    <input type="text" class="form-control" name="titulo" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Ano de Lançamento</label>
+                    <input type="number" class="form-control" name="ano_lancamento" required>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Gênero</label>
+                    <select class="form-select" name="id_genero" required>
+                        <option value="" disabled selected>Selecione um gênero...</option>
+                        {% for g in generos %}
+                            <option value="{{ g.id_genero }}">{{ g.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="form-label">Sinopse</label>
+                    <textarea class="form-control" name="sinopse" rows="3" placeholder="Breve resumo do filme..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success">Cadastrar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

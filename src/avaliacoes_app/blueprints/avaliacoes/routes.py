@@ -1,82 +1,84 @@
-from flask import request, jsonify
+from flask import request, render_template, url_for, flash, redirect
 from sqlalchemy.exc import IntegrityError
-from ... extensions import db
+from ...extensions import db
 from . import avaliacoes_bp
 from ...models import Avaliacao, Filme, Usuario
 
-@avaliacoes_bp.route('/', methods=['POST'])
+# CREATE
+@avaliacoes_bp.route('/nova', methods=['POST'])
 def criar_avaliacao():
-    data = request.get_json()
-
-    if not data or not all(key in data for key in ('nota', 'filme_id', 'usuario_id')):
-        return jsonify({'erro': 'Dados incompletos'}), 400
+    id_usuario = request.form.get('id_usuario')
+    id_filme = request.form.get('id_filme')
+    nota_str = request.form.get('nota')
     
+    # 1. Validação da nota no Python (melhora o feedback pro usuário)
     try:
-        nota = int(data['nota'])
+        nota = int(nota_str)
         if nota < 1 or nota > 5:
-            return jsonify({'erro': 'A nota deve ser entre 1 e 5'}), 400
-    except ValueError:
-        return jsonify({'erro': 'A nota deve ser um número inteiro'}), 400
-    
-    if not Usuario.query.get(data['usuario_id']):
-        return jsonify({'erro': 'Usuário não encontrado'}), 404
-    if not Filme.query.get(data['filme_id']):
-        return jsonify({'erro': 'Filme não encontrado'}), 404
-    
-    nova_avaliacao = Avaliacao(
-        id_usuario=data['id_usuario'],
-        id_filme=data['id_filme'],
-        nota=nota
-    )
+            flash('A nota deve ser um valor entre 1 e 5.', 'error')
+            return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
+    except (ValueError, TypeError):
+        flash('Nota inválida. Por favor, insira um número inteiro.', 'error')
+        return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
 
-    db.session.add(nova_avaliacao)
-
-    try:
+    # 2. Tentativa de inserção no banco
+    try: 
+        nova_avaliacao = Avaliacao(
+            id_usuario=id_usuario,
+            id_filme=id_filme,
+            nota=nota
+        )
+        db.session.add(nova_avaliacao)
         db.session.commit()
-        return jsonify({'mensagem': 'Avaliação criada com sucesso', 'id': nova_avaliacao.id_avaliacao}), 201
     
+        flash('Avaliação registrada com sucesso!', 'success')
+        return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
+        
     except IntegrityError:
         db.session.rollback()
-        return jsonify({'erro': 'Não é permitido criar uma avaliação duplicada'}), 409
-    
+        # Se cair aqui, a restrição uk_usuario_filme barrou a inserção
+        flash('Você já avaliou este filme anteriormente!', 'error')
+        return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
 
-@avaliacoes_bp.route('/<int:id_avaliacao>', methods=['GET'])
-def listar_avaliacao(id_avaliacao):
+
+# READ (Listar Todas)
+@avaliacoes_bp.route('/', methods=['GET'])
+def listar_avaliacoes():
     avaliacoes = Avaliacao.query.all()
-    resultado = [
-        {
-            'id_avaliacao': avaliacao.id_avaliacao,
-            'id_usuario': avaliacao.id_usuario,
-            'id_filme': avaliacao.id_filme,
-            'nota': avaliacao.nota
-        }
-        for avaliacao in avaliacoes
-    ]
-    return jsonify(resultado), 200
+    # Dica: Você também pode usar join() para trazer o título do filme e nome do usuário aqui
+    return render_template('avaliar.html', avaliacoes=avaliacoes)
 
 
-@avaliacoes_bp.route('/<int:id_avaliacao>', methods=['PUT'])
+# UPDATE (Usando POST para compatibilidade com HTML Forms)
+@avaliacoes_bp.route('/editar/<int:id_avaliacao>', methods=['POST'])
 def atualizar_avaliacao(id_avaliacao):
     avaliacao = Avaliacao.query.get_or_404(id_avaliacao)
-    data = request.get_json()
 
-    if 'nota' in data:
-        nota = int(data['nota'])
-        if nota < 1 or nota > 5:
-            return jsonify({'erro': 'A nota deve ser entre 1 e 5'}), 400
-        avaliacao.nota = nota
+    nota_str = request.form.get('nota')
+    if nota_str:
+        try:
+            nota = int(nota_str)
+            if nota < 1 or nota > 5:
+                flash('A nota deve ser entre 1 e 5.', 'error')
+                return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
+            
+            avaliacao.nota = nota
+            db.session.commit()
+            flash('Avaliação atualizada com sucesso!', 'success')
+            
+        except ValueError:
+            flash('Nota inválida. Por favor, insira um número inteiro.', 'error')
+            
+    return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))
 
-    if 'comentario' in data:
-        avaliacao.comentario = data['comentario']
 
-    db.session.commit()
-    return jsonify({'mensagem': 'Avaliação atualizada com sucesso'}), 200
-
-
-@avaliacoes_bp.route('/<int:id_avaliacao>', methods=['DELETE'])
+# DELETE (Usando POST para compatibilidade com HTML Forms)
+@avaliacoes_bp.route('/deletar/<int:id_avaliacao>', methods=['POST'])
 def deletar_avaliacao(id_avaliacao):
     avaliacao = Avaliacao.query.get_or_404(id_avaliacao)
     
     db.session.delete(avaliacao)
     db.session.commit()
-    return jsonify({'mensagem': 'Avaliação deletada com sucesso'}), 200
+
+    flash('Avaliação deletada com sucesso!', 'success')
+    return redirect(url_for('avaliacoes_bp.listar_avaliacoes'))

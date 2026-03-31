@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Novo Gênero</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('generos_bp.criar_genero') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Nome do Gênero</label>
+                        <input type="text" class="form-control" name="nome" placeholder="Ex: Ação, Comédia..." required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Adicionar Gênero</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <h3 class="mb-3">Gêneros Cadastrados</h3>
+        <ul class="list-group shadow-sm">
+            {% for genero in generos %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ genero.nome }}
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-info text-white" data-bs-toggle="modal" data-bs-target="#editGen{{ genero.id_genero }}">Editar</button>
+                    <form method="POST" action="{{ url_for('generos_bp.deletar_genero', id_genero=genero.id_genero) }}" onsubmit="return confirm('Tem certeza que deseja excluir?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                    </form>
+                </div>
+            </li>
+
+            <div class="modal fade" id="editGen{{ genero.id_genero }}" tabindex="-1">
+                <div class="modal-dialog">
+                    <form method="POST" action="{{ url_for('generos_bp.atualizar_genero', id_genero=genero.id_genero) }}" class="modal-content">
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title">Editar Gênero</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" class="form-control" name="nome" value="{{ genero.nome }}" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <li class="list-group-item text-center text-muted">Nenhum gênero cadastrado.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
