@@ -40,12 +40,10 @@
                     </div>
                 </form>
             </div>
-        </div>
     </div>
-
     <div class="col-md-7">
         <h4 class="mb-3">Avaliações Registradas</h4>
-        
+
         {% if filme.avaliacoes %}
             <div class="list-group">
                 {% for avaliacao in filme.avaliacoes %}
@@ -113,7 +111,7 @@
             Este filme ainda não possui avaliações. Seja o primeiro!
         </div>
     {% endif %}
-</div>
+    </div>
                         <div class="d-flex gap-2 mt-2 mt-md-0">
                             
                             <form method="POST" action="{{ url_for('avaliacoes.deletar_avaliacao', id_avaliacao=avaliacao.id_avaliacao) }}" onsubmit="return confirm('Tem certeza que deseja excluir esta avaliação?');">
@@ -123,7 +121,6 @@
                             <button type="button" class="btn btn-sm btn-info text-white" data-bs-toggle="modal" data-bs-target="#modalEditar{{ avaliacao.id_avaliacao }}">
                                 Editar
                             </button>
-                            
                         </div>
                     </div>
                 {% endfor %}
