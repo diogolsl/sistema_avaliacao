@@ -20,8 +20,8 @@
                 <p class="card-text text-truncate" style="max-height: 4.5em; overflow: hidden;" title="{{ filme.sinopse }}">{{ filme.sinopse }}</p>
             </div>
             <div class="card-footer bg-transparent border-top p-3">
-                <a href="{{ url_for('avaliacoes.tela_avaliar', id_filme=filme.id_filme) }}" class="btn btn-primary w-100">Avaliar Filme</a>
-                
+                <a class="btn btn-primary w-100" style="padding-bottom: 10px; " href="{{ url_for('avaliacoes.tela_avaliar', id_filme=filme.id_filme) }}">Avaliar Filme</a>
+
                 <div class="d-flex gap-2">
                     <button class="btn btn-outline-info btn-sm w-50" data-bs-toggle="modal" data-bs-target="#editFilme{{ filme.id_filme }}">Editar</button>
                     <form method="POST" action="{{ url_for('filmes.deletar_filme', id_filme=filme.id_filme) }}" class="w-50" onsubmit="return confirm('Excluir o filme apagará todas as suas avaliações. Continuar?');">
