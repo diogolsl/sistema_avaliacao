@@ -1,135 +1,63 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-5 mb-4">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Avaliar: {{ filme.titulo }}</h4>
-            </div>
-            <div class="card-body">
-                <form method="POST" action="{{ url_for('avaliacoes.criar_avaliacao') }}">
-    
-                    <input type="hidden" name="id_filme" value="{{ filme.id_filme }}">
-
-                    <div class="mb-3">
-                        <label for="id_usuario" class="form-label">Quem está avaliando?</label>
-                        <select class="form-select" id="id_usuario" name="id_usuario" required>
-                            <option value="" disabled selected>Selecione seu usuário...</option>
-                            {% for usuario in usuarios %}
-                                <option value="{{ usuario.id_usuario }}">{{ usuario.nome }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="nota" class="form-label">Nota (1 a 5)</label>
-                        <select class="form-select" id="nota" name="nota" required>
-                            <option value="" disabled selected>Escolha uma nota...</option>
-                            <option value="5">5 - Excelente</option>
-                            <option value="4">4 - Muito Bom</option>
-                            <option value="3">3 - Bom</option>
-                            <option value="2">2 - Ruim</option>
-                            <option value="1">1 - Péssimo</option>
-                        </select>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success">Registrar Avaliação</button>
-                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Voltar</a>
-                    </div>
-                </form>
-            </div>
-    </div>
-    <div class="col-md-7">
-        <h4 class="mb-3">Avaliações Registradas</h4>
-
-        {% if filme.avaliacoes %}
-            <div class="list-group">
-                {% for avaliacao in filme.avaliacoes %}
-                    <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center flex-wrap">
-                        <div>
-                            <strong>{{ avaliacao.autor.nome }}</strong> deu nota: 
-                            <span class="badge bg-warning text-dark fs-6">{{ avaliacao.nota }} / 5</span>
-                        </div>
-                        <div class="col-md-7">
-    <h4 class="mb-3">Avaliações Registradas</h4>
-    
-    {% if filme.avaliacoes %}
-        <div class="list-group">
-            {% for avaliacao in filme.avaliacoes %}
-                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center flex-wrap">
-                    <div>
-                        <strong>{{ avaliacao.autor.nome }}</strong> deu nota: 
-                        <span class="badge bg-warning text-dark fs-6">{{ avaliacao.nota }} / 5</span>
-                    </div>
-                    
-                    <div class="d-flex gap-2 mt-2 mt-md-0">
-                        <form method="POST" action="{{ url_for('avaliacoes.deletar_avaliacao', id_avaliacao=avaliacao.id_avaliacao) }}" onsubmit="return confirm('Tem certeza que deseja excluir esta avaliação?');">
-                            <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
-                        </form>
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="row g-0">
+                <div class="col-md-5 bg-white p-5">
+                    <h3 class="fw-bold mb-4 text-primary">Sua Opinião</h3>
+                    <form method="POST" action="{{ url_for('avaliacoes.criar_avaliacao') }}">
+                        <input type="hidden" name="id_filme" value="{{ filme.id_filme }}">
                         
-                        <button type="button" class="btn btn-sm btn-info text-white" data-bs-toggle="modal" data-bs-target="#modalEditar{{ avaliacao.id_avaliacao }}">
-                            Editar
-                        </button>
-                    </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">USUÁRIO</label>
+                            <select class="form-select border-0 bg-light" name="id_usuario" required>
+                                {% for usuario in usuarios %}
+                                    <option value="{{ usuario.id_usuario }}">{{ usuario.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold">NOTA DO FILME</label>
+                            <select class="form-select border-0 bg-light py-3" name="nota" required style="font-size: 1.1rem; font-weight: 600;">
+                                <option value="5">5/5(Excelente)</option>
+                                <option value="4">4/5(Muito Bom)</option>
+                                <option value="3">3/5(Bom)</option>
+                                <option value="2">2/5(Ruim)</option>
+                                <option value="1">1/5(Péssimo)</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg w-100 mb-3">Publicar Avaliação</button>
+                        <a href="{{ url_for('filmes.listar_filmes') }}" class="btn btn-link w-100 text-muted">Voltar ao Catálogo</a>
+                    </form>
                 </div>
 
-                <div class="modal fade" id="modalEditar{{ avaliacao.id_avaliacao }}" tabindex="-1" aria-labelledby="modalLabel{{ avaliacao.id_avaliacao }}" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header bg-info text-white">
-                                <h5 class="modal-title" id="modalLabel{{ avaliacao.id_avaliacao }}">Editar Avaliação de {{ avaliacao.autor.nome }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="col-md-7 bg-light p-5 border-start">
+                    <h5 class="fw-bold mb-4">Avaliações para "{{ filme.titulo }}"</h5>
+                    <div class="review-list" style="max-height: 400px; overflow-y: auto;">
+                        {% for avaliacao in filme.avaliacoes %}
+                        <div class="bg-white p-3 rounded-4 mb-3 shadow-sm d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="mb-0 fw-bold">{{ avaliacao.autor.nome }}</p>
+                                <div class="text-warning">
+                                    {% for i in range(avaliacao.nota) %}{% endfor %}
+                                    <span class="text-muted small">({{ avaliacao.nota }}/5)</span>
+                                </div>
                             </div>
-                            
-                            <form method="POST" action="{{ url_for('avaliacoes.atualizar_avaliacao', id_avaliacao=avaliacao.id_avaliacao) }}">
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="nota_edit_{{ avaliacao.id_avaliacao }}" class="form-label">Nova Nota (1 a 5)</label>
-                                        <select class="form-select" id="nota_edit_{{ avaliacao.id_avaliacao }}" name="nota" required>
-                                            <option value="5" {% if avaliacao.nota == 5 %}selected{% endif %}>5 - Excelente</option>
-                                            <option value="4" {% if avaliacao.nota == 4 %}selected{% endif %}>4 - Muito Bom</option>
-                                            <option value="3" {% if avaliacao.nota == 3 %}selected{% endif %}>3 - Bom</option>
-                                            <option value="2" {% if avaliacao.nota == 2 %}selected{% endif %}>2 - Ruim</option>
-                                            <option value="1" {% if avaliacao.nota == 1 %}selected{% endif %}>1 - Péssimo</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                                </div>
+                            <form method="POST" action="{{ url_for('avaliacoes.deletar_avaliacao', id_avaliacao=avaliacao.id_avaliacao) }}">
+                                <button type="submit" class="btn btn-link text-danger p-0" onclick="return confirm('Excluir?')">Excluir</button>
                             </form>
                         </div>
+                        {% else %}
+                        <p class="text-muted">Ninguém avaliou ainda. Seja o primeiro!</p>
+                        {% endfor %}
                     </div>
                 </div>
-                {% endfor %}
-        </div>
-    {% else %}
-        <div class="alert alert-secondary">
-            Este filme ainda não possui avaliações. Seja o primeiro!
-        </div>
-    {% endif %}
-    </div>
-                        <div class="d-flex gap-2 mt-2 mt-md-0">
-                            
-                            <form method="POST" action="{{ url_for('avaliacoes.deletar_avaliacao', id_avaliacao=avaliacao.id_avaliacao) }}" onsubmit="return confirm('Tem certeza que deseja excluir esta avaliação?');">
-                                <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
-                            </form>
-                            
-                            <button type="button" class="btn btn-sm btn-info text-white" data-bs-toggle="modal" data-bs-target="#modalEditar{{ avaliacao.id_avaliacao }}">
-                                Editar
-                            </button>
-                        </div>
-                    </div>
-                {% endfor %}
             </div>
-        {% else %}
-            <div class="alert alert-secondary">
-                Este filme ainda não possui avaliações. Seja o primeiro!
-            </div>
-        {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}
