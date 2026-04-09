@@ -52,12 +52,12 @@ Entidades:
     * nome
     * email
 
-* Genero(
+* Genero
     * id_genero (pk)
     * nome
 
     * filmes --relacionamento com a tabela Filme
-)
+
 
 * Filme
     * id_filme (pk)
