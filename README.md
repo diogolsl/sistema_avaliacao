@@ -93,6 +93,11 @@ Siga os passos abaixo para configurar o ambiente de desenvolvimento local.
 * Python 3.8+ instalado.
 * Gerenciador de pacotes pip.
 
+```bash
+git clone https://github.com/diogolsl/sistema_avaliacao.git
+cd sistema_avaliacao
+```
+
 #### Configuração do Ambiente Virtual
 
 É altamente recomendável utilizar um ambiente virtual para isolar as dependências do projeto:
