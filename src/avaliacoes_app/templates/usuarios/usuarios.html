@@ -51,7 +51,7 @@
                             <td class="text-muted">{{ usuario.email }}</td>
                             <td class="text-end pe-4 py-3">
                                 <button class="btn btn-sm btn-outline-secondary border-0 me-1" data-bs-toggle="modal" data-bs-target="#editUser{{ usuario.id_usuario }}">
-                                    <i class="bi bi-pencil-square"></i>
+                                    <i class="bi bi-pencil"></i>
                                 </button>
                                 <form method="POST" action="{{ url_for('usuarios.deletar_usuario', id_usuario=usuario.id_usuario) }}" class="d-inline" onsubmit="return confirm('Excluir usuário e suas avaliações?');">
                                     <button type="submit" class="btn btn-sm btn-outline-danger border-0"><i class="bi bi-trash"></i></button>
