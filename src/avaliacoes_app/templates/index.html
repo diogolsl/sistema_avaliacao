@@ -3,7 +3,7 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-end mb-5">
     <div>
-        <h2 class="fw-800 mb-0">Explorar Catálogo</h2>
+        <h2 class="fw-800 mb-0" style="color: var(--primary-color);">Explorar Catálogo</h2>
         <p class="text-muted">Avalie e descubra os melhores filmes do momento.</p>
     </div>
     <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#modalNovoFilme">
@@ -14,10 +14,10 @@
 <div class="row">
     {% for filme in filmes %}
     <div class="col-lg-4 col-md-6 mb-4">
-        <div class="card h-100 shadow-sm border-0">
+        <div class="card h-100">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-start mb-2">
-                    <span class="badge bg-light text-dark border">{{ filme.categoria.nome if filme.categoria else 'Geral' }}</span>
+                    <span class="badge">{{ filme.categoria.nome if filme.categoria else 'Geral' }}</span>
                     <span class="text-muted small fw-bold">{{ filme.ano_lancamento }}</span>
                 </div>
                 <h4 class="card-title mb-3">{{ filme.titulo }}</h4>
@@ -35,7 +35,7 @@
                     </button>
                     <form method="POST" action="{{ url_for('filmes.deletar_filme', id_filme=filme.id_filme) }}" class="flex-grow-1">
                         <button type="submit" class="btn btn-outline-danger btn-sm w-100" onclick="return confirm('Excluir filme?')">
-                        <i class="bi bi-trash"></i>Excluir
+                        <i class="bi bi-trash"></i>
                         </button>
                     </form>
                 </div>
@@ -45,7 +45,7 @@
 
     <div class="modal fade" id="editFilme{{ filme.id_filme }}" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <form method="POST" action="{{ url_for('filmes.atualizar_filme', id_filme=filme.id_filme) }}" class="modal-content border-0">
+            <form method="POST" action="{{ url_for('filmes.atualizar_filme', id_filme=filme.id_filme) }}" class="modal-content">
                 <div class="modal-header border-0 p-4">
                     <h5 class="fw-bold">Editar Filme</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -53,15 +53,15 @@
                 <div class="modal-body p-4 pt-0">
                     <div class="mb-3">
                         <label class="form-label small fw-bold">TÍTULO</label>
-                        <input type="text" class="form-control bg-light border-0" name="titulo" value="{{ filme.titulo }}" required>
+                        <input type="text" class="form-control" name="titulo" value="{{ filme.titulo }}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold">ANO</label>
-                        <input type="number" class="form-control bg-light border-0" name="ano_lancamento" value="{{ filme.ano_lancamento }}" required>
+                        <input type="number" class="form-control" name="ano_lancamento" value="{{ filme.ano_lancamento }}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold">SINOPSE</label>
-                        <textarea class="form-control bg-light border-0" name="sinopse" rows="3">{{ filme.sinopse }}</textarea>
+                        <textarea class="form-control" name="sinopse" rows="3">{{ filme.sinopse }}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer border-0 p-4">
@@ -75,7 +75,7 @@
 
 <div class="modal fade" id="modalNovoFilme" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <form method="POST" action="{{ url_for('filmes.criar_filme') }}" class="modal-content border-0 shadow">
+        <form method="POST" action="{{ url_for('filmes.criar_filme') }}" class="modal-content shadow">
             <div class="modal-header border-0 p-4">
                 <h5 class="fw-bold">Novo Filme no Catálogo</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -83,16 +83,16 @@
             <div class="modal-body p-4 pt-0">
                 <div class="mb-3">
                     <label class="form-label small fw-bold">TÍTULO</label>
-                    <input type="text" class="form-control bg-light border-0" name="titulo" placeholder="Nome do filme" required>
+                    <input type="text" class="form-control" name="titulo" placeholder="Nome do filme" required>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label small fw-bold">ANO</label>
-                        <input type="number" class="form-control bg-light border-0" name="ano_lancamento" required>
+                        <input type="number" class="form-control" name="ano_lancamento" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label small fw-bold">GÊNERO</label>
-                        <select class="form-select bg-light border-0" name="id_genero">
+                        <select class="form-select" name="id_genero">
                             {% for g in generos %}
                                 <option value="{{ g.id_genero }}">{{ g.nome }}</option>
                             {% endfor %}
@@ -101,7 +101,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label small fw-bold">SINOPSE</label>
-                    <textarea class="form-control bg-light border-0" name="sinopse" rows="3" placeholder="Do que se trata o filme?"></textarea>
+                    <textarea class="form-control" name="sinopse" rows="3" placeholder="Do que se trata o filme?"></textarea>
                 </div>
             </div>
             <div class="modal-footer border-0 p-4">
